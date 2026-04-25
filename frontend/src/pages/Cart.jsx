@@ -4,6 +4,7 @@ import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api/axios';
 import { formatCurrency } from '../utils/formatCurrency';
+import { resolveImageUrl } from '../utils/resolveImageUrl';
 import EmptyState from '../components/common/EmptyState';
 import { FiShoppingCart, FiTrash2, FiMinus, FiPlus } from 'react-icons/fi';
 import toast from 'react-hot-toast';
@@ -55,8 +56,6 @@ const Cart = () => {
     );
   }
 
-  const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl font-serif font-bold text-primary mb-8">Shopping Cart</h1>
@@ -76,7 +75,7 @@ const Cart = () => {
                 <div key={item._id} className="grid grid-cols-1 sm:grid-cols-12 gap-4 p-4 sm:items-center">
                   <div className="col-span-1 sm:col-span-6 flex gap-4">
                     <img 
-                      src={item.product?.images?.[0] ? `${baseUrl}${item.product.images[0]}` : 'https://placehold.co/200'} 
+                      src={resolveImageUrl(item.product?.images?.[0])}
                       alt={item.product?.title} 
                       className="w-20 h-20 object-cover rounded-md border border-gray-100"
                     />

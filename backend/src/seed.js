@@ -63,7 +63,7 @@ const importData = async () => {
         category: 'Mugs',
         stock: 50,
         isFeatured: true,
-        images: ['/uploads/products/default1.jpg'],
+        images: ['/products/default1.jpg'],
         customizationOptions: {
           allowNamePrint: true,
           allowCustomText: true,
@@ -79,7 +79,7 @@ const importData = async () => {
         category: 'Magic Mugs',
         stock: 30,
         isFeatured: true,
-        images: ['/uploads/products/default2.jpg'],
+        images: ['/products/default2.jpg'],
         customizationOptions: {
           allowNamePrint: false,
           allowCustomText: true,
@@ -96,7 +96,7 @@ const importData = async () => {
         category: 'Couple Mugs',
         stock: 20,
         isFeatured: false,
-        images: ['/uploads/products/default3.jpg'],
+        images: ['/products/default3.jpg'],
         customizationOptions: {
           allowNamePrint: true,
           allowCustomText: false,
@@ -112,7 +112,7 @@ const importData = async () => {
         category: 'Corporate',
         stock: 100,
         isFeatured: false,
-        images: ['/uploads/products/default4.jpg'],
+        images: ['/products/default4.jpg'],
         customizationOptions: {
           allowNamePrint: false,
           allowCustomText: true,
@@ -128,7 +128,7 @@ const importData = async () => {
         category: 'Occasions',
         stock: 40,
         isFeatured: true,
-        images: ['/uploads/products/default5.jpg'],
+        images: ['/products/default5.jpg'],
         customizationOptions: {
           allowNamePrint: true,
           allowCustomText: true,
@@ -144,7 +144,7 @@ const importData = async () => {
         category: 'Mugs',
         stock: 60,
         isFeatured: false,
-        images: ['/uploads/products/default6.jpg'],
+        images: ['/products/default6.jpg'],
         customizationOptions: {
           allowNamePrint: false,
           allowCustomText: true,

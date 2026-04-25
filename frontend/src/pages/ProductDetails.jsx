@@ -5,6 +5,7 @@ import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
 import Loader from '../components/common/Loader';
 import { formatCurrency } from '../utils/formatCurrency';
+import { resolveImageUrl } from '../utils/resolveImageUrl';
 import toast from 'react-hot-toast';
 
 const ProductDetails = () => {
@@ -66,7 +67,6 @@ const ProductDetails = () => {
   if (!product) return null;
 
   const currentPrice = product.discountPrice || product.price;
-  const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -75,7 +75,7 @@ const ProductDetails = () => {
         <div className="w-full md:w-1/2">
           <div className="bg-gray-50 rounded-xl overflow-hidden mb-4 border border-gray-100 shadow-sm aspect-square">
             <img 
-              src={activeImage ? `${baseUrl}${activeImage}` : 'https://placehold.co/600x600/F5F5DC/3E2723?text=Product'} 
+              src={resolveImageUrl(activeImage)} 
               alt={product.title} 
               className="w-full h-full object-cover"
             />
@@ -88,7 +88,7 @@ const ProductDetails = () => {
                   onClick={() => setActiveImage(img)}
                   className={`w-20 h-20 rounded-md overflow-hidden cursor-pointer border-2 ${activeImage === img ? 'border-accent' : 'border-transparent'}`}
                 >
-                  <img src={`${baseUrl}${img}`} alt="" className="w-full h-full object-cover" />
+                  <img src={resolveImageUrl(img)} alt="" className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>

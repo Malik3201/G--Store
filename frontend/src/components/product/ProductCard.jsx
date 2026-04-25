@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { resolveImageUrl } from '../../utils/resolveImageUrl';
 
 const ProductCard = ({ product }) => {
-  const imageUrl = product.images?.length > 0 
-    ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${product.images[0]}`
-    : 'https://placehold.co/400x400/F5F5DC/3E2723?text=Premium+Mug';
+  const imageUrl = resolveImageUrl(product.images?.[0]);
 
   return (
     <div className="card group flex flex-col h-full">
