@@ -1,6 +1,12 @@
 const Product = require('../models/Product');
 const asyncHandler = require('../utils/asyncHandler');
 
+const parseImageLinks = (value) => {
+  if (!value) return [];
+  const raw = Array.isArray(value) ? value : String(value).split('\n');
+  return raw.map((item) => String(item).trim()).filter((item) => /^https?:\/\//i.test(item));
+};
+
 // @desc    Get all active products
 // @route   GET /api/products
 // @access  Public
@@ -33,19 +39,27 @@ const getProductBySlug = asyncHandler(async (req, res) => {
   res.json({ success: true, data: product });
 });
 
+// @desc    Get single product by id (admin)
+// @route   GET /api/products/id/:id
+// @access  Private/Admin
+const getProductById = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+  res.json({ success: true, data: product });
+});
+
 // @desc    Create a product
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
   const {
     title, description, price, discountPrice, category, stock, isFeatured,
-    customizationOptions, isActive
+    customizationOptions, isActive, imageLinks
   } = req.body;
-
-  let images = [];
-  if (req.files && req.files.length > 0) {
-    images = req.files.map(file => `/uploads/products/${file.filename}`);
-  }
+  const images = parseImageLinks(imageLinks);
 
   let parsedOptions = {};
   if (customizationOptions) {
@@ -78,7 +92,7 @@ const createProduct = asyncHandler(async (req, res) => {
 const updateProduct = asyncHandler(async (req, res) => {
   const {
     title, description, price, discountPrice, category, stock, isFeatured,
-    customizationOptions, isActive
+    customizationOptions, isActive, imageLinks
   } = req.body;
 
   const product = await Product.findById(req.params.id);
@@ -106,10 +120,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.customizationOptions = parsedOptions;
   }
 
-  if (req.files && req.files.length > 0) {
-    const newImages = req.files.map(file => `/uploads/products/${file.filename}`);
-    // we can append or replace. Let's replace for simplicity
-    product.images = newImages;
+  if (imageLinks !== undefined) {
+    product.images = parseImageLinks(imageLinks);
   }
 
   const updatedProduct = await product.save();
@@ -146,5 +158,5 @@ const toggleActive = asyncHandler(async (req, res) => {
 
 module.exports = {
   getProducts, getFeaturedProducts, getProductBySlug,
-  createProduct, updateProduct, deleteProduct, toggleActive
+  getProductById, createProduct, updateProduct, deleteProduct, toggleActive
 };

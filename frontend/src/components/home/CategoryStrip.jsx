@@ -1,12 +1,12 @@
-import { FiCoffee, FiHeart, FiGift, FiBriefcase } from 'react-icons/fi';
+import { FiGift, FiBriefcase, FiImage, FiTag } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 const CategoryStrip = () => {
   const categories = [
-    { name: 'Name Mugs', icon: FiCoffee, query: 'Mugs' },
-    { name: 'Couple Mugs', icon: FiHeart, query: 'Couple Mugs' },
-    { name: 'Gift Mugs', icon: FiGift, query: 'Occasions' },
-    { name: 'Office Mugs', icon: FiBriefcase, query: 'Corporate' },
+    { name: 'Gift Items', icon: FiGift, query: 'Gifts' },
+    { name: 'Corporate Kits', icon: FiBriefcase, query: 'Corporate' },
+    { name: 'Photo Prints', icon: FiImage, query: 'Photo Products' },
+    { name: 'Promo Products', icon: FiTag, query: 'Promotional' },
   ];
 
   return (

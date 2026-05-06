@@ -38,6 +38,10 @@ export const AuthProvider = ({ children }) => {
         return true;
       }
     } catch (error) {
+      // Clear stale auth data (e.g., expired/invalid token from another API environment).
+      setUser(null);
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
       toast.error(error.response?.data?.message || 'Login failed');
       return false;
     }

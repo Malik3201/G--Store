@@ -71,7 +71,7 @@ const Products = () => {
     <div className="bg-background min-h-screen pb-16">
       <div className="bg-primary text-secondary py-12 mb-8">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-serif font-bold mb-4">Shop Mugs</h1>
+          <h1 className="text-4xl font-serif font-bold mb-4">Shop Custom Products</h1>
           <p className="text-secondary-dark max-w-2xl mx-auto">Find the perfect personalized mug for any occasion.</p>
         </div>
       </div>

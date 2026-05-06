@@ -3,6 +3,8 @@ import FeaturedProducts from '../components/home/FeaturedProducts';
 import CategoryStrip from '../components/home/CategoryStrip';
 import WhyChooseUs from '../components/home/WhyChooseUs';
 import CustomMugSection from '../components/home/CustomMugSection';
+import TestimonialsSection from '../components/home/TestimonialsSection';
+import CtaSection from '../components/home/CtaSection';
 
 const Home = () => {
   return (
@@ -12,6 +14,8 @@ const Home = () => {
       <FeaturedProducts />
       <CustomMugSection />
       <WhyChooseUs />
+      <TestimonialsSection />
+      <CtaSection />
     </div>
   );
 };

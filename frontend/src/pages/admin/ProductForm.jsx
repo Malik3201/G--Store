@@ -24,15 +24,15 @@ const ProductForm = () => {
     allowNamePrint: false,
     allowCustomText: false,
     maxTextLength: 30,
-    availableColors: 'White'
+    availableColors: 'White',
+    imageLinks: ''
   });
-  const [images, setImages] = useState(null);
 
   useEffect(() => {
     if (isEditing) {
       const fetchProduct = async () => {
         try {
-          const { data } = await api.get(`/products/${id}`); // Assuming /products/:id exists
+          const { data } = await api.get(`/products/id/${id}`);
           if (data.success) {
             const p = data.data;
             setFormData({
@@ -47,10 +47,11 @@ const ProductForm = () => {
               allowNamePrint: p.customizationOptions?.allowNamePrint || false,
               allowCustomText: p.customizationOptions?.allowCustomText || false,
               maxTextLength: p.customizationOptions?.maxTextLength || 30,
-              availableColors: p.customizationOptions?.availableColors?.join(', ') || 'White'
+              availableColors: p.customizationOptions?.availableColors?.join(', ') || 'White',
+              imageLinks: (p.images || []).join('\n')
             });
           }
-        } catch (error) {
+        } catch {
           toast.error('Failed to load product');
           navigate('/admin/products');
         } finally {
@@ -66,23 +67,20 @@ const ProductForm = () => {
     setFormData({ ...formData, [e.target.name]: value });
   };
 
-  const handleImageChange = (e) => {
-    setImages(e.target.files);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    
-    const payload = new FormData();
-    payload.append('title', formData.title);
-    payload.append('description', formData.description);
-    payload.append('price', formData.price);
-    if (formData.discountPrice) payload.append('discountPrice', formData.discountPrice);
-    payload.append('category', formData.category);
-    payload.append('stock', formData.stock);
-    payload.append('isFeatured', formData.isFeatured);
-    payload.append('isActive', formData.isActive);
+    const payload = {
+      title: formData.title,
+      description: formData.description,
+      price: formData.price,
+      category: formData.category,
+      stock: formData.stock,
+      isFeatured: formData.isFeatured,
+      isActive: formData.isActive,
+      imageLinks: formData.imageLinks
+    };
+    if (formData.discountPrice) payload.discountPrice = formData.discountPrice;
 
     const customizationOptions = {
       allowNamePrint: formData.allowNamePrint,
@@ -90,20 +88,14 @@ const ProductForm = () => {
       maxTextLength: parseInt(formData.maxTextLength) || 30,
       availableColors: formData.availableColors.split(',').map(c => c.trim()).filter(Boolean)
     };
-    payload.append('customizationOptions', JSON.stringify(customizationOptions));
-
-    if (images) {
-      for (let i = 0; i < images.length; i++) {
-        payload.append('images', images[i]);
-      }
-    }
+    payload.customizationOptions = customizationOptions;
 
     try {
       if (isEditing) {
-        await api.put(`/products/${id}`, payload, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await api.put(`/products/${id}`, payload);
         toast.success('Product updated');
       } else {
-        await api.post('/products', payload, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await api.post('/products', payload);
         toast.success('Product created');
       }
       navigate('/admin/products');
@@ -197,15 +189,16 @@ const ProductForm = () => {
           </div>
 
           <div className="md:col-span-2 pt-4 border-t border-gray-100">
-            <label className="block text-sm font-medium text-text mb-2">Product Images</label>
-            <input 
-              type="file" 
-              multiple 
-              accept="image/*"
-              onChange={handleImageChange}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-white hover:file:bg-primary transition-colors cursor-pointer"
+            <label className="block text-sm font-medium text-text mb-2">Product Image Links</label>
+            <textarea
+              name="imageLinks"
+              rows="5"
+              value={formData.imageLinks}
+              onChange={handleChange}
+              className="input-field resize-y"
+              placeholder={'Paste one direct image URL per line\nhttps://images.unsplash.com/photo-...\nhttps://cdn.example.com/product-2.jpg'}
             />
-            <p className="text-xs text-text-light mt-2">Select multiple images. The first image will be the main one. Re-uploading replaces existing images.</p>
+            <p className="text-xs text-text-light mt-2">Only image URLs are supported. Multiple links allowed, one per line. No file upload is used.</p>
           </div>
         </div>
 

@@ -3,23 +3,23 @@ import { FiStar, FiAward, FiMessageSquare, FiTruck } from 'react-icons/fi';
 const WhyChooseUs = () => {
   const reasons = [
     {
-      title: 'Premium Ceramic Quality',
-      description: 'Our mugs are crafted from high-grade ceramic, ensuring durability and a premium feel in your hands.',
+      title: 'Multiple Product Categories',
+      description: 'Order custom gifts, apparel, branding kits, and more from one streamlined platform.',
       icon: FiAward,
     },
     {
-      title: 'Long Lasting Print',
-      description: 'Advanced sublimation printing guarantees vibrant colors that will never fade, even after hundreds of washes.',
+      title: 'Reliable Print Quality',
+      description: 'We use quality materials and print processes to keep designs clean, vibrant, and consistent.',
       icon: FiStar,
     },
     {
-      title: 'Custom Name Printing',
-      description: 'Make it uniquely yours or create the perfect personalized gift by adding custom names or text.',
+      title: 'Flexible Personalization',
+      description: 'Add names, text, logos, or artwork to match personal, business, and event requirements.',
       icon: FiMessageSquare,
     },
     {
-      title: 'Easy WhatsApp Order',
-      description: 'Checkout seamlessly through our automated WhatsApp system for a quick and personal shopping experience.',
+      title: 'Fast Support & Delivery',
+      description: 'Quick support and dependable fulfillment for both single-item and bulk custom orders.',
       icon: FiTruck,
     },
   ];

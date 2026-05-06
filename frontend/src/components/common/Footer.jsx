@@ -9,14 +9,15 @@ const Footer = () => {
           <div>
             <h3 className="font-serif text-2xl font-bold mb-4">G<span className="text-accent">Store</span></h3>
             <p className="text-sm text-secondary-dark leading-relaxed">
-              Premium customized mugs for every occasion. We print your memories with care and ship them directly to your door.
+              Premium custom products for gifting, events, and business branding. We turn your ideas into quality products delivered to your door.
             </p>
           </div>
           <div>
             <h4 className="font-semibold text-lg mb-4 text-white">Quick Links</h4>
             <ul className="space-y-2 text-sm text-secondary-dark">
               <li><Link to="/" className="hover:text-accent transition-colors">Home</Link></li>
-              <li><Link to="/products" className="hover:text-accent transition-colors">Shop Mugs</Link></li>
+              <li><Link to="/products" className="hover:text-accent transition-colors">Shop Products</Link></li>
+              <li><Link to="/track-order" className="hover:text-accent transition-colors">Track Order</Link></li>
               <li><Link to="/about" className="hover:text-accent transition-colors">About Us</Link></li>
               <li><Link to="/contact" className="hover:text-accent transition-colors">Contact</Link></li>
             </ul>

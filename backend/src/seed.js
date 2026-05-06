@@ -63,7 +63,7 @@ const importData = async () => {
         category: 'Mugs',
         stock: 50,
         isFeatured: true,
-        images: ['/products/default1.jpg'],
+        images: ['https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?auto=format&fit=crop&w=900&q=80'],
         customizationOptions: {
           allowNamePrint: true,
           allowCustomText: true,
@@ -79,7 +79,7 @@ const importData = async () => {
         category: 'Magic Mugs',
         stock: 30,
         isFeatured: true,
-        images: ['/products/default2.jpg'],
+        images: ['https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=900&q=80'],
         customizationOptions: {
           allowNamePrint: false,
           allowCustomText: true,
@@ -96,7 +96,7 @@ const importData = async () => {
         category: 'Couple Mugs',
         stock: 20,
         isFeatured: false,
-        images: ['/products/default3.jpg'],
+        images: ['https://images.unsplash.com/photo-1577937927133-66ef06acdf18?auto=format&fit=crop&w=900&q=80'],
         customizationOptions: {
           allowNamePrint: true,
           allowCustomText: false,
@@ -112,7 +112,7 @@ const importData = async () => {
         category: 'Corporate',
         stock: 100,
         isFeatured: false,
-        images: ['/products/default4.jpg'],
+        images: ['https://images.unsplash.com/photo-1578898887932-dce23a595ad4?auto=format&fit=crop&w=900&q=80'],
         customizationOptions: {
           allowNamePrint: false,
           allowCustomText: true,
@@ -128,7 +128,7 @@ const importData = async () => {
         category: 'Occasions',
         stock: 40,
         isFeatured: true,
-        images: ['/products/default5.jpg'],
+        images: ['https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=80'],
         customizationOptions: {
           allowNamePrint: true,
           allowCustomText: true,
@@ -144,7 +144,7 @@ const importData = async () => {
         category: 'Mugs',
         stock: 60,
         isFeatured: false,
-        images: ['/products/default6.jpg'],
+        images: ['https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=900&q=80'],
         customizationOptions: {
           allowNamePrint: false,
           allowCustomText: true,

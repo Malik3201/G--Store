@@ -1,36 +1,44 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../../api/axios';
 import Loader from '../../components/common/Loader';
 import { formatCurrency } from '../../utils/formatCurrency';
 import toast from 'react-hot-toast';
-import { FiPackage } from 'react-icons/fi';
-
-const statusColors = {
-  whatsapp_pending: 'bg-amber-100 text-amber-700',
-  confirmed: 'bg-blue-100 text-blue-700',
-  processing: 'bg-purple-100 text-purple-700',
-  shipped: 'bg-indigo-100 text-indigo-700',
-  delivered: 'bg-emerald-100 text-emerald-700',
-  cancelled: 'bg-red-100 text-red-600',
-};
+import { FiExternalLink, FiPackage } from 'react-icons/fi';
+import { TRACKING_STATUSES, TRACKING_STATUS_COLORS, TRACKING_STATUS_LABELS } from '../../utils/trackingStatus';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [updatingId, setUpdatingId] = useState('');
+
+  const fetchOrders = async () => {
+    try {
+      const { data } = await api.get('/orders/admin');
+      if (data.success) setOrders(data.data);
+    } catch {
+      toast.error('Failed to load orders');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const { data } = await api.get('/orders/admin');
-        if (data.success) setOrders(data.data);
-      } catch (error) {
-        toast.error('Failed to load orders');
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchOrders();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleStatusChange = async (orderId, status) => {
+    setUpdatingId(orderId);
+    try {
+      await api.patch(`/orders/admin/${orderId}/status`, { status });
+      toast.success('Order status updated');
+      await fetchOrders();
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update status');
+    } finally {
+      setUpdatingId('');
+    }
+  };
 
   if (loading) return <Loader />;
 
@@ -54,8 +62,9 @@ const Orders = () => {
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-mono text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">#{order._id.slice(-8).toUpperCase()}</span>
-                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${statusColors[order.status] || 'bg-gray-100 text-gray-600'}`}>
-                      {order.status.replace('_', ' ')}
+                    <span className="font-mono text-xs text-gray-500 bg-slate-100 px-2 py-0.5 rounded">{order.trackingId || 'Tracking pending'}</span>
+                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${TRACKING_STATUS_COLORS[order.status] || 'bg-gray-100 text-gray-600'}`}>
+                      {TRACKING_STATUS_LABELS[order.status] || order.status.replace('_', ' ')}
                     </span>
                   </div>
                   <p className="text-xs text-gray-400 mt-1">{new Date(order.createdAt).toLocaleString()}</p>
@@ -91,6 +100,29 @@ const Orders = () => {
                     ))}
                   </div>
                 </div>
+              </div>
+
+              <div className="mt-4 border-t border-gray-100 pt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-500">Update Status</label>
+                  <select
+                    value={order.status}
+                    onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                    disabled={updatingId === order._id}
+                    className="input-field py-2 text-sm min-w-52"
+                  >
+                    {TRACKING_STATUSES.map((status) => (
+                      <option key={status.value} value={status.value}>{status.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <Link
+                  to={`/admin/orders/${order._id}`}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-accent transition-colors"
+                >
+                  View full order details <FiExternalLink size={14} />
+                </Link>
               </div>
             </div>
           ))}

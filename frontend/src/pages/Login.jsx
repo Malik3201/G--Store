@@ -33,19 +33,19 @@ const Login = () => {
             <Link to="/" className="font-serif text-3xl font-bold text-white">
               G<span className="text-[#C4A882]">Store</span>
             </Link>
-            <p className="text-[#C4A882] text-sm mt-1 tracking-widest uppercase">Premium Customized Mugs</p>
+            <p className="text-[#C4A882] text-sm mt-1 tracking-widest uppercase">Custom Gifts & Products</p>
           </div>
           <div>
             <h2 className="text-4xl font-serif font-bold leading-tight mb-4">
               Welcome <br />Back
             </h2>
             <p className="text-white/70 text-sm leading-relaxed">
-              Sign in to access your cart, track orders, and enjoy a personalized shopping experience.
+              Sign in to access your cart, track orders, and manage your personalized product requests.
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-[#C4A882]/20 flex items-center justify-center text-2xl">☕</div>
-            <p className="text-white/60 text-xs italic">"Every mug tells a story — make yours."</p>
+            <div className="w-12 h-12 rounded-full bg-[#C4A882]/20 flex items-center justify-center text-2xl">🎁</div>
+            <p className="text-white/60 text-xs italic">"Every custom product tells your story."</p>
           </div>
         </div>
 
@@ -106,10 +106,6 @@ const Login = () => {
             </button>
           </form>
 
-          <p className="text-center text-xs text-gray-400 mt-8">
-            Admin?{' '}
-            <Link to="/admin/login" className="text-[#3E2723] font-semibold hover:underline">Login to Admin Portal</Link>
-          </p>
         </div>
       </div>
     </div>

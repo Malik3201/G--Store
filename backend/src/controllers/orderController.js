@@ -3,6 +3,28 @@ const Cart = require('../models/Cart');
 const SiteSetting = require('../models/SiteSetting');
 const asyncHandler = require('../utils/asyncHandler');
 const User = require('../models/User');
+const TrackingHistory = require('../models/TrackingHistory');
+const { generateTrackingId } = require('../utils/trackingId');
+const { TRACKING_STATUS, TRACKING_MESSAGES, TRACKING_STATUS_ORDER } = require('../utils/trackingStatus');
+
+const ensureTrackingId = async (order) => {
+  if (!order.trackingId) {
+    order.trackingId = await generateTrackingId();
+  }
+};
+
+const ensureInitialHistory = async (order) => {
+  const existing = await TrackingHistory.countDocuments({ order: order._id });
+  if (existing === 0) {
+    await TrackingHistory.create({
+      order: order._id,
+      status: order.status || TRACKING_STATUS.ORDER_RECEIVED,
+      message: TRACKING_MESSAGES[order.status] || TRACKING_MESSAGES[TRACKING_STATUS.ORDER_RECEIVED],
+      createdAt: order.createdAt,
+      updatedAt: order.createdAt,
+    });
+  }
+};
 
 const checkoutWhatsapp = asyncHandler(async (req, res) => {
   // 1. Get user cart
@@ -82,6 +104,8 @@ const checkoutWhatsapp = asyncHandler(async (req, res) => {
   const encodedMessage = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/${adminWhatsappNumber}?text=${encodedMessage}`;
 
+  const trackingId = await generateTrackingId();
+
   // 6. Create Order record
   const order = await Order.create({
     user: user._id,
@@ -94,8 +118,15 @@ const checkoutWhatsapp = asyncHandler(async (req, res) => {
     },
     subtotal,
     total,
-    status: 'whatsapp_pending',
+    trackingId,
+    status: TRACKING_STATUS.ORDER_RECEIVED,
     whatsappMessage: message
+  });
+
+  await TrackingHistory.create({
+    order: order._id,
+    status: TRACKING_STATUS.ORDER_RECEIVED,
+    message: TRACKING_MESSAGES[TRACKING_STATUS.ORDER_RECEIVED],
   });
 
   // Clear the cart
@@ -115,9 +146,118 @@ const checkoutWhatsapp = asyncHandler(async (req, res) => {
 const getAdminOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find()
     .sort({ createdAt: -1 })
-    .populate('user', 'name email');
+    .populate('user', 'name email')
+    .populate('items.product', 'title images');
   
   res.json({ success: true, data: orders });
 });
 
-module.exports = { checkoutWhatsapp, getAdminOrders };
+const getAdminOrderById = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id)
+    .populate('user', 'name email phone address')
+    .populate('items.product', 'title slug images price discountPrice');
+
+  if (!order) {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+
+  await ensureTrackingId(order);
+  await order.save();
+  await ensureInitialHistory(order);
+  const trackingHistory = await TrackingHistory.find({ order: order._id }).sort({ createdAt: 1 });
+  res.json({ success: true, data: { order, trackingHistory } });
+});
+
+const updateAdminOrder = asyncHandler(async (req, res) => {
+  const { customer, items, subtotal, total } = req.body;
+
+  const order = await Order.findById(req.params.id);
+  if (!order) {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+
+  if (customer) {
+    order.customer = {
+      ...order.customer,
+      ...customer,
+    };
+  }
+
+  if (Array.isArray(items) && items.length > 0) {
+    order.items = items;
+  }
+
+  if (subtotal !== undefined) order.subtotal = subtotal;
+  if (total !== undefined) order.total = total;
+
+  await ensureTrackingId(order);
+  const updatedOrder = await order.save();
+  res.json({ success: true, message: 'Order updated successfully', data: updatedOrder });
+});
+
+const updateOrderStatus = asyncHandler(async (req, res) => {
+  const { status, adminNote = '' } = req.body;
+
+  if (!TRACKING_STATUS_ORDER.includes(status)) {
+    res.status(422);
+    throw new Error('Invalid order status');
+  }
+
+  const order = await Order.findById(req.params.id);
+  if (!order) {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+
+  await ensureTrackingId(order);
+  order.status = status;
+  await order.save();
+
+  const history = await TrackingHistory.create({
+    order: order._id,
+    status,
+    message: TRACKING_MESSAGES[status],
+    adminNote,
+  });
+
+  res.json({
+    success: true,
+    message: 'Order status updated successfully',
+    data: { order, history },
+  });
+});
+
+const getOrderByTrackingId = asyncHandler(async (req, res) => {
+  const trackingId = String(req.params.trackingId || '').trim().toUpperCase();
+  const order = await Order.findOne({ trackingId })
+    .populate('items.product', 'title slug images')
+    .populate('user', 'name email phone address');
+
+  if (!order) {
+    res.status(404);
+    throw new Error('No order found for this Tracking ID.');
+  }
+
+  await ensureTrackingId(order);
+  await order.save();
+  await ensureInitialHistory(order);
+  const trackingHistory = await TrackingHistory.find({ order: order._id }).sort({ createdAt: 1 });
+  res.json({
+    success: true,
+    data: {
+      order,
+      trackingHistory,
+    },
+  });
+});
+
+module.exports = {
+  checkoutWhatsapp,
+  getAdminOrders,
+  getAdminOrderById,
+  updateAdminOrder,
+  updateOrderStatus,
+  getOrderByTrackingId,
+};

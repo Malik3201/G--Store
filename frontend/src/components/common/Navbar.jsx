@@ -16,10 +16,13 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
-  const NavLinks = () => (
+  const navLinks = (
     <>
       <Link to="/" className="hover:text-accent transition-colors" onClick={() => setIsOpen(false)}>Home</Link>
       <Link to="/products" className="hover:text-accent transition-colors" onClick={() => setIsOpen(false)}>Products</Link>
+      <Link to="/track-order" className="hover:text-accent transition-colors" onClick={() => setIsOpen(false)}>Track Order</Link>
+      <Link to="/about" className="hover:text-accent transition-colors" onClick={() => setIsOpen(false)}>About</Link>
+      <Link to="/contact" className="hover:text-accent transition-colors" onClick={() => setIsOpen(false)}>Contact</Link>
       
       <Link to="/cart" className="relative hover:text-accent transition-colors flex items-center" onClick={() => setIsOpen(false)}>
         <FiShoppingCart className="text-xl" />
@@ -64,7 +67,7 @@ const Navbar = () => {
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
-            <NavLinks />
+            {navLinks}
           </div>
 
           <div className="md:hidden flex items-center">
@@ -87,7 +90,7 @@ const Navbar = () => {
       {/* Mobile menu */}
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-4 space-y-4 flex flex-col shadow-lg">
-          <NavLinks />
+          {navLinks}
         </div>
       )}
     </nav>

@@ -3,22 +3,23 @@ const {
   getProducts,
   getFeaturedProducts,
   getProductBySlug,
+  getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
   toggleActive
 } = require('../controllers/productController');
 const { protect, admin } = require('../middleware/authMiddleware');
-const { uploadArray } = require('../middleware/uploadMiddleware');
 
 const router = express.Router();
 
 router.get('/', getProducts);
 router.get('/featured', getFeaturedProducts);
+router.get('/id/:id', protect, admin, getProductById);
 router.get('/:slug', getProductBySlug);
 
-router.post('/', protect, admin, uploadArray('images', 5), createProduct);
-router.put('/:id', protect, admin, uploadArray('images', 5), updateProduct);
+router.post('/', protect, admin, createProduct);
+router.put('/:id', protect, admin, updateProduct);
 router.delete('/:id', protect, admin, deleteProduct);
 router.patch('/:id/toggle-active', protect, admin, toggleActive);
 

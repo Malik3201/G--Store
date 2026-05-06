@@ -15,6 +15,12 @@ export const CartProvider = ({ children }) => {
       setCart(null);
       return;
     }
+
+    // Admin sessions do not use customer cart endpoints.
+    if (user.role === 'admin') {
+      setCart(null);
+      return;
+    }
     try {
       const response = await api.get('/cart');
       if (response.data.success) {

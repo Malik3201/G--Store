@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { TRACKING_STATUS, TRACKING_STATUS_ORDER } = require('../utils/trackingStatus');
 
 const orderItemSchema = new mongoose.Schema(
   {
@@ -40,9 +41,18 @@ const orderSchema = new mongoose.Schema(
     },
     subtotal: { type: Number, required: true },
     total: { type: Number, required: true },
+    trackingId: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+      uppercase: true,
+      trim: true,
+    },
     status: {
       type: String,
-      default: 'whatsapp_pending',
+      enum: TRACKING_STATUS_ORDER,
+      default: TRACKING_STATUS.ORDER_RECEIVED,
     },
     whatsappMessage: {
       type: String,

@@ -37,7 +37,7 @@ const Register = () => {
               Join the<br />Community
             </h2>
             <p className="text-white/70 text-sm leading-relaxed">
-              Create your account to save favorites, track orders and get exclusive deals on customized mugs.
+              Create your account to save favorites, track orders, and get exclusive deals on custom products.
             </p>
             <div className="space-y-3">
               {['Free account, no subscriptions', 'Easy WhatsApp checkout', 'Track your custom orders'].map((item) => (

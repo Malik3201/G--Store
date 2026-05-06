@@ -37,7 +37,12 @@ const Cart = () => {
       const orderRes = await api.post('/orders/checkout-whatsapp');
       
       if (orderRes.data.success) {
-        toast.success('Order ready! Redirecting to WhatsApp...', { id: 'checkout' });
+        const generatedTrackingId = orderRes.data?.data?.order?.trackingId;
+        if (generatedTrackingId) {
+          toast.success(`Tracking ID generated: ${generatedTrackingId}`, { id: 'checkout' });
+        } else {
+          toast.success('Order ready! Redirecting to WhatsApp...', { id: 'checkout' });
+        }
         await fetchCart(); // refresh cart state
         window.open(orderRes.data.data.whatsappUrl, '_blank');
         navigate('/products'); // Redirect user back to shop

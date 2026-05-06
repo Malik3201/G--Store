@@ -32,7 +32,7 @@ const FeaturedProducts = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-serif font-bold text-primary mb-4">Trending Now</h2>
-          <p className="text-text-light max-w-2xl mx-auto">Discover our most loved personalized mugs. Handpicked for their quality and design.</p>
+          <p className="text-text-light max-w-2xl mx-auto">Discover our most loved custom products across gifting, events, and business branding.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map(product => (
@@ -40,7 +40,7 @@ const FeaturedProducts = () => {
           ))}
         </div>
         <div className="text-center mt-12">
-          <Link to="/products" className="btn-secondary inline-block">View All Mugs</Link>
+          <Link to="/products" className="btn-secondary inline-block">View All Products</Link>
         </div>
       </div>
     </section>
